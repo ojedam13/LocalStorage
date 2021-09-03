@@ -13,9 +13,10 @@ function eventListeners() {
     //cuando el documento este listo
     document.addEventListener('DOMContentLoaded', () => {
         tweets = JSON.parse(localStorage.getItem('tweets')) || [];
+        crearHtml();
     });
 
-    crearHtml();
+    
 }
 
 
@@ -68,11 +69,22 @@ function crearHtml() {
 
     if (tweets.length > 0) {
         tweets.forEach(tweet => {
+            //Agregar un boton de eliminar
+            const btnEliminar = document.createElement('a');
+            btnEliminar.classList.add('borrar-tweet');
+            btnEliminar.innerText = 'X';
+
+            //añadir la funcion de eliminar
+            btnEliminar.onclick = () => {
+                borrarTweet(tweet.id);
+            }
+
             //crear html
             const li = document.createElement('li');
             //añadir texto
             li.innerText = tweet.tweet;
-
+            //asignar btn
+            li.appendChild(btnEliminar);
             //insertar en el html
             listaTweets.appendChild(li);
         });
@@ -86,6 +98,11 @@ function sincronizarStorage() {
     localStorage.setItem('tweets', JSON.stringify(tweets));
 }
 
+//elimina un tweet
+function borrarTweet(id) {
+    tweets = tweets.filter(tweet => tweet.id !== id);
+    crearHtml();
+}
 
 //limpiar html
 function limpiarHtml() {
